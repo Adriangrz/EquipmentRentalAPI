@@ -22,6 +22,7 @@ namespace EquipmentRental.Database
         public DbSet<Category> Categories { get; set; }
         public DbSet<Rent> Rents { get; set; }
         public DbSet<SportEquipment> SportsEquipment { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
