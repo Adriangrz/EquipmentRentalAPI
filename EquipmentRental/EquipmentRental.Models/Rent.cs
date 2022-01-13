@@ -15,7 +15,7 @@ namespace EquipmentRental.Models
         public DateTime IssuedDate { get; set; }
         public bool IsReturned { get; set; }
         public DateTime ReturnedDate { get; set; }
-        public Guid SportEquipmentID { get; set; }
+        public Guid SportEquipmentId { get; set; }
         public SportEquipment SportEquipment { get; set; }
     }
 }
