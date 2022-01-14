@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace EquipmentRental.Services.Interfaces
 {
-    public interface ISportEquipment
+    public interface ISportEquipmentService
     {
-        Task<IEnumerable<SportEquipment>> GetAll();
-        void Insert(SportEquipment equipment);
+        Task<IEnumerable<SportEquipment>> GetAllAsync();
+        Task InsertAsync(SportEquipment equipment);
         void Update(SportEquipment equipment);
-        void Delete(Guid id);
-        void Save();
+        Task DeleteAsync(Guid id);
     }
 }

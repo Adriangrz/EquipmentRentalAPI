@@ -1,6 +1,5 @@
-﻿using EquipmentRental.Database;
+﻿using EquipmentRental.Database.Repositories.Interfaces;
 using EquipmentRental.Models;
-using EquipmentRental.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,39 +7,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EquipmentRental.Services.DatabaseService
+namespace EquipmentRental.Database.Repositories
 {
-    public class UserRepository : IUser
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        private readonly EquipmentRentalContext _context;
-        public UserRepository(EquipmentRentalContext context)
+        public UserRepository(EquipmentRentalContext context) : base(context)
         {
-            _context = context;
         }
-        public async void Delete(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             User? user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
-            if(user is null) return;
+            if (user is null) return;
             _context.Users.Remove(user);
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _context.Users.ToListAsync();
         }
 
-        public async void Insert(User user)
+        public async Task InsertAsync(User user)
         {
             await _context.Users.AddAsync(user);
         }
         public void Update(User user)
         {
             _context.Users.Update(user);
-        }
-
-        public async void Save()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }

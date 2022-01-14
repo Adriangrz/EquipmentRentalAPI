@@ -1,6 +1,5 @@
-﻿using EquipmentRental.Database;
+﻿using EquipmentRental.Database.Repositories.Interfaces;
 using EquipmentRental.Models;
-using EquipmentRental.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,22 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EquipmentRental.Services.DatabaseService
+namespace EquipmentRental.Database.Repositories
 {
-    public class RentRepository : IRent
+    public class RentRepository : BaseRepository, IRentRepository
     {
-        private readonly EquipmentRentalContext _context;
-        public RentRepository(EquipmentRentalContext context)
+        public RentRepository(EquipmentRentalContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<IEnumerable<Rent>> GetAll()
+        public async Task<IEnumerable<Rent>> GetAllAsync()
         {
             return await _context.Rents.ToListAsync();
         }
 
-        public async void Insert(Rent rent)
+        public async Task InsertAsync(Rent rent)
         {
             await _context.Rents.AddAsync(rent);
         }
@@ -33,7 +30,7 @@ namespace EquipmentRental.Services.DatabaseService
             _context.Rents.Update(rent);
         }
 
-        public async void UpdateIssuedField(Guid id, bool isIssued, DateTime issuedDate)
+        public async Task UpdateIssuedFieldAsync(Guid id, bool isIssued, DateTime issuedDate)
         {
             Rent? rent = await _context.Rents.SingleOrDefaultAsync(se => se.SportEquipmentId == id);
             if (rent is null) return;
@@ -42,17 +39,13 @@ namespace EquipmentRental.Services.DatabaseService
             _context.Rents.Update(rent);
         }
 
-        public async void UpdateReturnedField(Guid id, bool isReturned, DateTime returnedDate)
+        public async Task UpdateReturnedFieldAsync(Guid id, bool isReturned, DateTime returnedDate)
         {
             Rent? rent = await _context.Rents.SingleOrDefaultAsync(se => se.SportEquipmentId == id);
             if (rent is null) return;
             rent.IsReturned = isReturned;
             rent.ReturnedDate = returnedDate;
             _context.Rents.Update(rent);
-        }
-        public async void Save()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }

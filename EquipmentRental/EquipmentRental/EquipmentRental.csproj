@@ -16,11 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EquipmentRental.Database\EquipmentRental.Database.csproj" />
+    <ProjectReference Include="..\EquipmentRental.Services\EquipmentRental.Services.csproj" />
   </ItemGroup>
 
 </Project>

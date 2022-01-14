@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace EquipmentRental.Services.Interfaces
 {
-    public interface IUser
+    public interface IUserService
     {
-        Task<IEnumerable<User>> GetAll();
-        void Insert(User user);
+        Task<IEnumerable<User>> GetAllAsync();
+        Task InsertAsync(User user);
         void Update(User user);
-        void Delete(Guid id);
-        void Save();
+        Task DeleteAsync(Guid id);
     }
 }
