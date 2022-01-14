@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EquipmentRental.Services.DatabaseService.Interfaces
+namespace EquipmentRental.Services.Interfaces
 {
     public interface ISportEquipment
     {
-        IEnumerable<SportEquipment> GetAll();
+        Task<IEnumerable<SportEquipment>> GetAll();
         void Insert(SportEquipment equipment);
         void Update(SportEquipment equipment);
-        void Delete(int id);
+        void Delete(Guid id);
+        void Save();
     }
 }

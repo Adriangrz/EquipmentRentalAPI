@@ -4,6 +4,7 @@ using EquipmentRental.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EquipmentRental.Database.Migrations
 {
     [DbContext(typeof(EquipmentRentalContext))]
-    partial class EquipmentRentalContextModelSnapshot : ModelSnapshot
+    [Migration("20220114112920_RentChanged")]
+    partial class RentChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,14 +49,10 @@ namespace EquipmentRental.Database.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsIssued")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsReturned")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("IssuedDate")
                         .HasColumnType("datetime2");

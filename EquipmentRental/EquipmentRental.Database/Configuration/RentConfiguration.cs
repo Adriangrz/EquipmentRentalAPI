@@ -17,6 +17,12 @@ namespace EquipmentRental.Database.Configuration
 
             builder.HasKey(x => x.RentId);
 
+            builder.Property(x=>x.IsIssued).HasDefaultValue(false);
+            builder.Property(x => x.IssuedDate).HasDefaultValue(null);
+
+            builder.Property(x=>x.IsReturned).HasDefaultValue(false);
+            builder.Property(x=>x.ReturnedDate).HasDefaultValue(null);
+
             builder.HasOne(r => r.SportEquipment)
                 .WithOne(se => se.Rent)
                 .HasForeignKey<Rent>(r => r.SportEquipmentId);

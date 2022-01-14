@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EquipmentRental.Services.DatabaseService.Interfaces
+namespace EquipmentRental.Services.Interfaces
 {
     public interface IUser
     {
-        IEnumerable<User> GetAll();
+        Task<IEnumerable<User>> GetAll();
         void Insert(User user);
         void Update(User user);
-        void Delete(User user);
+        void Delete(Guid id);
+        void Save();
     }
 }
