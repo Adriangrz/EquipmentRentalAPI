@@ -1,6 +1,8 @@
 using EquipmentRental.Database;
 using EquipmentRental.Database.Repositories;
 using EquipmentRental.Database.Repositories.Interfaces;
+using EquipmentRental.Repositories;
+using EquipmentRental.Repositories.Interfaces;
 using EquipmentRental.Services;
 using EquipmentRental.Services.DatabaseService;
 using EquipmentRental.Services.Interfaces;
@@ -27,6 +29,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRentService, RentService>();
 builder.Services.AddScoped<ISportEquipmentService, SportEquipmentService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

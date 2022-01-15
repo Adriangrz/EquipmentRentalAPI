@@ -1,4 +1,5 @@
 ﻿using EquipmentRental.Models;
+using EquipmentRental.Services.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace EquipmentRental.Services.Interfaces
     public interface IRentService
     {
         Task<IEnumerable<Rent>> GetAllAsync();
-        Task InsertAsync(Rent rent);
+        Task<RentResponse> InsertAsync(Rent rent);
         void Update(Rent rent);
         Task UpdateIssuedFieldAsync(Guid id, bool isIssued, DateTime issuedDate);
         Task UpdateReturnedFieldAsync(Guid id, bool isReturned, DateTime returnedDate);

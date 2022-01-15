@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\EquipmentRental.Database\EquipmentRental.Database.csproj" />
     <ProjectReference Include="..\EquipmentRental.Models\EquipmentRental.Models.csproj" />
-    <ProjectReference Include="..\EquipmentRental.Repositories\EquipmentRental.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

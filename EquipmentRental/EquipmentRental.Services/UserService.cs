@@ -1,6 +1,6 @@
 ﻿using EquipmentRental.Database;
-using EquipmentRental.Database.Repositories.Interfaces;
 using EquipmentRental.Models;
+using EquipmentRental.Repositories.Interfaces;
 using EquipmentRental.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,9 +14,11 @@ namespace EquipmentRental.Services.DatabaseService
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task DeleteAsync(Guid id)
         {

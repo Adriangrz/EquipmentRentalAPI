@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace EquipmentRental.Models.ApiModels
 {
-    public class User
+    public class RentIssuedResource
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
+        public bool IsIssued { get; set; }
+        public DateTime IssuedDate { get; set; }
     }
 }

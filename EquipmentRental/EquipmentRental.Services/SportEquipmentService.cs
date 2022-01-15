@@ -1,6 +1,6 @@
 ﻿using EquipmentRental.Database;
-using EquipmentRental.Database.Repositories.Interfaces;
 using EquipmentRental.Models;
+using EquipmentRental.Repositories.Interfaces;
 using EquipmentRental.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,9 +14,11 @@ namespace EquipmentRental.Services
     public class SportEquipmentService : ISportEquipmentService
     {
         private readonly ISportEquipmentRepository _sportEquipmentRepository;
-        public SportEquipmentService(ISportEquipmentRepository sportEquipmentRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public SportEquipmentService(ISportEquipmentRepository sportEquipmentRepository, IUnitOfWork unitOfWork)
         {
             _sportEquipmentRepository = sportEquipmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task DeleteAsync(Guid id)

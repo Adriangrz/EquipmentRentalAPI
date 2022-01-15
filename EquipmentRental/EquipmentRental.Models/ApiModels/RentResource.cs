@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EquipmentRental.Models.ApiModels
 {
-    public class Rent
+    public class RentResource
     {
         public Guid RentId { get; set; }
         public DateTime From { get; set; }

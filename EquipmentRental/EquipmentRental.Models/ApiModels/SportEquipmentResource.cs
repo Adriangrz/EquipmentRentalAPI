@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EquipmentRental.Models.ApiModels
 {
-    public class SportEquipment
+    public class SportEquipmentResource
     {
         public Guid SportEquipmentId { get; set; }
         public string Name { get; set; }

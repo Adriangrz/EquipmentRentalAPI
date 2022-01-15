@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EquipmentRental.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EquipmentRental.Database.Repositories
+namespace EquipmentRental.Repositories
 {
     public abstract class BaseRepository
     {

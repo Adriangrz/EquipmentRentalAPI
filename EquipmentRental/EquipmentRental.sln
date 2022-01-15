@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquipmentRental", "EquipmentRental\EquipmentRental.csproj", "{62E5F0AE-CAAF-4DE8-9EB4-EA4E8486BE63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EquipmentRental", "EquipmentRental\EquipmentRental.csproj", "{62E5F0AE-CAAF-4DE8-9EB4-EA4E8486BE63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquipmentRental.Models", "EquipmentRental.Models\EquipmentRental.Models.csproj", "{FD2CAE9C-A50A-4EE6-87D3-ACD0FEB2A472}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EquipmentRental.Models", "EquipmentRental.Models\EquipmentRental.Models.csproj", "{FD2CAE9C-A50A-4EE6-87D3-ACD0FEB2A472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquipmentRental.Database", "EquipmentRental.Database\EquipmentRental.Database.csproj", "{A9FA2E7A-9069-42FB-BA8B-50C815414274}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EquipmentRental.Database", "EquipmentRental.Database\EquipmentRental.Database.csproj", "{A9FA2E7A-9069-42FB-BA8B-50C815414274}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquipmentRental.Services", "EquipmentRental.Services\EquipmentRental.Services.csproj", "{35B8AC95-3020-46BE-84F6-EB66FFB209F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EquipmentRental.Services", "EquipmentRental.Services\EquipmentRental.Services.csproj", "{35B8AC95-3020-46BE-84F6-EB66FFB209F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquipmentRental.Repositories", "EquipmentRental.Repositories\EquipmentRental.Repositories.csproj", "{AC2C8964-65E3-4B33-8CE0-72579AB01729}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{35B8AC95-3020-46BE-84F6-EB66FFB209F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35B8AC95-3020-46BE-84F6-EB66FFB209F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35B8AC95-3020-46BE-84F6-EB66FFB209F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC2C8964-65E3-4B33-8CE0-72579AB01729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC2C8964-65E3-4B33-8CE0-72579AB01729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC2C8964-65E3-4B33-8CE0-72579AB01729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC2C8964-65E3-4B33-8CE0-72579AB01729}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

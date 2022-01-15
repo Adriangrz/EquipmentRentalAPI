@@ -1,6 +1,7 @@
 ﻿using EquipmentRental.Database;
-using EquipmentRental.Database.Repositories.Interfaces;
 using EquipmentRental.Models;
+using EquipmentRental.Repositories.Interfaces;
+using EquipmentRental.Services.Communication;
 using EquipmentRental.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,9 +15,11 @@ namespace EquipmentRental.Services
     public class RentService : IRentService
     {
         private readonly IRentRepository _rentRepository;
-        public RentService(IRentRepository rentRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public RentService(IRentRepository rentRepository, IUnitOfWork unitOfWork)
         {
             _rentRepository = rentRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<Rent>> GetAllAsync()
@@ -24,9 +27,19 @@ namespace EquipmentRental.Services
             return await _rentRepository.GetAllAsync();
         }
 
-        public async Task InsertAsync(Rent rent)
+        public async Task<RentResponse> InsertAsync(Rent rent)
         {
-            await _rentRepository.InsertAsync(rent);
+            try
+            {
+                await _rentRepository.InsertAsync(rent);
+                await _unitOfWork.Save();
+
+                return new RentResponse(rent);
+            }
+            catch (Exception ex)
+            {
+                return new RentResponse($"An error occurred when saving the category: {ex.Message}");
+            }
         }
 
         public void Update(Rent rent)

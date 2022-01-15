@@ -1,5 +1,6 @@
-﻿using EquipmentRental.Database.Repositories.Interfaces;
+﻿using EquipmentRental.Database;
 using EquipmentRental.Models;
+using EquipmentRental.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EquipmentRental.Database.Repositories
+namespace EquipmentRental.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {

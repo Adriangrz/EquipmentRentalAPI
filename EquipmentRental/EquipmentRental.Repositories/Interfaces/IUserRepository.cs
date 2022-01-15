@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EquipmentRental.Database.Repositories.Interfaces
+namespace EquipmentRental.Repositories.Interfaces
 {
     public interface IUserRepository
     {
