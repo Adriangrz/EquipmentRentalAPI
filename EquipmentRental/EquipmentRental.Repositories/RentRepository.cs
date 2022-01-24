@@ -21,6 +21,11 @@ namespace EquipmentRental.Repositories
             return await _context.Rents.ToListAsync();
         }
 
+        public async Task<Rent?> FindByIdAsync(Guid id)
+        {
+            return await _context.Rents.FindAsync(id);
+        }
+
         public async Task InsertAsync(Rent rent)
         {
             await _context.Rents.AddAsync(rent);
@@ -28,24 +33,6 @@ namespace EquipmentRental.Repositories
 
         public void Update(Rent rent)
         {
-            _context.Rents.Update(rent);
-        }
-
-        public async Task UpdateIssuedFieldAsync(Guid id, bool isIssued, DateTime issuedDate)
-        {
-            Rent? rent = await _context.Rents.SingleOrDefaultAsync(se => se.SportEquipmentId == id);
-            if (rent is null) return;
-            rent.IsIssued = isIssued;
-            rent.IssuedDate = issuedDate;
-            _context.Rents.Update(rent);
-        }
-
-        public async Task UpdateReturnedFieldAsync(Guid id, bool isReturned, DateTime returnedDate)
-        {
-            Rent? rent = await _context.Rents.SingleOrDefaultAsync(se => se.SportEquipmentId == id);
-            if (rent is null) return;
-            rent.IsReturned = isReturned;
-            rent.ReturnedDate = returnedDate;
             _context.Rents.Update(rent);
         }
     }

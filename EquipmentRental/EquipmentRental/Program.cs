@@ -1,6 +1,4 @@
 using EquipmentRental.Database;
-using EquipmentRental.Database.Repositories;
-using EquipmentRental.Database.Repositories.Interfaces;
 using EquipmentRental.Repositories;
 using EquipmentRental.Repositories.Interfaces;
 using EquipmentRental.Services;

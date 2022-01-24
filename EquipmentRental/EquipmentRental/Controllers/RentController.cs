@@ -31,40 +31,37 @@ namespace EquipmentRental.Controllers
 
         // POST api/<RentController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RentResource value)
+        public async Task<IActionResult> Post([FromBody] SaveUpdateRentResource value)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var rent = _mapper.Map<RentResource, Rent>(value);
+            var rent = _mapper.Map<SaveUpdateRentResource, Rent>(value);
 
             var result = await _rentServicee.InsertAsync(rent);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var rentResource = _mapper.Map<Rent, RentResource>(result.Resource);
+            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
             return Ok(rentResource);
         }
 
         // PUT api/<RentController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] RentResource value)
+        public async Task<IActionResult> Put(Guid id, [FromBody] SaveUpdateRentResource value)
         {
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
 
-        // PUT api/<RentController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] RentIssuedResource value)
-        {
+            var rent = _mapper.Map<SaveUpdateRentResource, Rent>(value);
+            var result = await _rentServicee.UpdateAsync(id, rent);
 
-        }
+            if (!result.Success)
+                return BadRequest(result.Message);
 
-        // PUT api/<RentController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] RentReturnedResource value)
-        {
-
+            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
+            return Ok(rentResource);
         }
     }
 }

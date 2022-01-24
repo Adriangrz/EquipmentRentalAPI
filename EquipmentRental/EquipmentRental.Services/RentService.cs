@@ -42,19 +42,26 @@ namespace EquipmentRental.Services
             }
         }
 
-        public void Update(Rent rent)
+        public async Task<RentResponse> UpdateAsync(Guid id,Rent rent)
         {
-            _rentRepository.Update(rent);
-        }
+            var rentById = await _rentRepository.FindByIdAsync(id);
+            if (rentById is null)
+                return new RentResponse("Category not found.");
 
-        public async Task UpdateIssuedFieldAsync(Guid id, bool isIssued, DateTime issuedDate)
-        {
-            await _rentRepository.UpdateIssuedFieldAsync(id,isIssued,issuedDate);
-        }
+            rent.RentId = id;
 
-        public async Task UpdateReturnedFieldAsync(Guid id, bool isReturned, DateTime returnedDate)
-        {
-            await _rentRepository.UpdateReturnedFieldAsync(id, isReturned, returnedDate);
+            try
+            {
+                _rentRepository.Update(rent);
+                await _unitOfWork.Save();
+
+                return new RentResponse(rentById);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new RentResponse($"An error occurred when updating the category: {ex.Message}");
+            }
         }
     }
 }
