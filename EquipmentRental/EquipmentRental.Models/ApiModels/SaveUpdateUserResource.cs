@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EquipmentRental.Models.ApiModels
 {
-    public class UserResource
+    public class SaveUpdateUserResource
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Password { get; set; }
     }
 }

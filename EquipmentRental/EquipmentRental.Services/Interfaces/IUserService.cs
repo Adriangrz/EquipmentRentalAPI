@@ -11,8 +11,8 @@ namespace EquipmentRental.Services.Interfaces
     public interface IUserService
     {
         Task<IEnumerable<User>> GetAllAsync();
-        Task InsertAsync(User user);
-        void Update(User user);
+        Task<UserResponse> InsertAsync(User user);
+        Task<UserResponse> UpdateAsync(Guid id, User user);
         Task<UserResponse> DeleteAsync(Guid id);
     }
 }

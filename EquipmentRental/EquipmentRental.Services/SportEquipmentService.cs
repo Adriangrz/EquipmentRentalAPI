@@ -85,10 +85,10 @@ namespace EquipmentRental.Services
 
             try
             {
-                _sportEquipmentRepository.Update(equipment);
+                _sportEquipmentRepository.Update(existingSportEquipment);
                 await _unitOfWork.Save();
 
-                return new SportEquipmentResponse(equipment);
+                return new SportEquipmentResponse(existingSportEquipment);
             }
             catch (Exception ex)
             {

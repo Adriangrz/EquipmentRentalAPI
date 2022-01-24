@@ -30,6 +30,11 @@ namespace EquipmentRental.Repositories
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task<User?> FindByNameAsync(string name)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Name == name);
+        }
+
         public async Task AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
