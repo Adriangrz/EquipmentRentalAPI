@@ -9,8 +9,11 @@ namespace EquipmentRental.Mapping
         public ModelToResourceProfile()
         {
             CreateMap<Category, CategoryResource>();
+            CreateMap<Category, SaveUpdateCategoryResource>();
             CreateMap<Rent, RentResource>();
+            CreateMap<Rent, SaveUpdateRentResource>();
             CreateMap<SportEquipment, SportEquipmentResource>();
+            CreateMap<SportEquipment, SaveUpdateSportEquipmentResource>();
             CreateMap<User, UserResource>();
         }
     }

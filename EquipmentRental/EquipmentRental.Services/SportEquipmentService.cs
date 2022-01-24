@@ -1,6 +1,7 @@
 ﻿using EquipmentRental.Database;
 using EquipmentRental.Models;
 using EquipmentRental.Repositories.Interfaces;
+using EquipmentRental.Services.Communication;
 using EquipmentRental.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,24 +22,78 @@ namespace EquipmentRental.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task<SportEquipmentResponse> DeleteAsync(Guid id)
         {
-            await _sportEquipmentRepository.DeleteAsync(id);
+            var existingSportEquipment = await _sportEquipmentRepository.FindByIdAsync(id);
+
+            if (existingSportEquipment is null)
+                return new SportEquipmentResponse("Sport equipment not found.");
+
+            try
+            {
+                _sportEquipmentRepository.Remove(existingSportEquipment);
+                await _unitOfWork.Save();
+
+                return new SportEquipmentResponse(existingSportEquipment);
+            }
+            catch (Exception ex)
+            {
+                return new SportEquipmentResponse($"An error occurred when deleting the sport equipment: {ex.Message}");
+            }
         }
 
         public async Task<IEnumerable<SportEquipment>> GetAllAsync()
         {
-            return await _sportEquipmentRepository.GetAllAsync();
+            return await _sportEquipmentRepository.ListAsync();
         }
 
-        public async Task InsertAsync(SportEquipment equipment)
+        public async Task<SportEquipmentResponse> GetById(Guid id)
         {
-            await _sportEquipmentRepository.InsertAsync(equipment);
+            var existingSportEquipment = await _sportEquipmentRepository.FindByIdAsync(id);
+
+            if (existingSportEquipment is null)
+                return new SportEquipmentResponse("Sport equipment not found.");
+
+            return new SportEquipmentResponse(existingSportEquipment);
         }
 
-        public void Update(SportEquipment equipment)
+        public async Task<SportEquipmentResponse> InsertAsync(SportEquipment equipment)
         {
-            _sportEquipmentRepository.Update(equipment);
+            try
+            {
+                await _sportEquipmentRepository.AddAsync(equipment);
+                await _unitOfWork.Save();
+
+                return new SportEquipmentResponse(equipment);
+            }
+            catch (Exception ex)
+            {
+                return new SportEquipmentResponse($"An error occurred when saving the sport equipment: {ex.Message}");
+            }
+        }
+
+        public async Task<SportEquipmentResponse> UpdateAsync(Guid id, SportEquipment equipment)
+        {
+            var existingSportEquipment = await _sportEquipmentRepository.FindByIdAsync(id);
+            if (existingSportEquipment is null)
+                return new SportEquipmentResponse("Sport equipment not found.");
+
+            existingSportEquipment.Name = equipment.Name;
+            existingSportEquipment.PriceForDay = equipment.PriceForDay;
+            existingSportEquipment.IsAvailable = equipment.IsAvailable;
+            existingSportEquipment.CategoryId = equipment.CategoryId;
+
+            try
+            {
+                _sportEquipmentRepository.Update(equipment);
+                await _unitOfWork.Save();
+
+                return new SportEquipmentResponse(equipment);
+            }
+            catch (Exception ex)
+            {
+                return new SportEquipmentResponse($"An error occurred when updating the sport equipment: {ex.Message}");
+            }
         }
     }
 }

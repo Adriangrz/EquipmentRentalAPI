@@ -16,7 +16,7 @@ namespace EquipmentRental.Repositories
         {
         }
 
-        public async Task<IEnumerable<Rent>> GetAllAsync()
+        public async Task<IEnumerable<Rent>> ListAsync()
         {
             return await _context.Rents.ToListAsync();
         }
@@ -26,7 +26,7 @@ namespace EquipmentRental.Repositories
             return await _context.Rents.FindAsync(id);
         }
 
-        public async Task InsertAsync(Rent rent)
+        public async Task AddAsync(Rent rent)
         {
             await _context.Rents.AddAsync(rent);
         }

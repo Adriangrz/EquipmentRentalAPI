@@ -1,6 +1,7 @@
 ﻿using EquipmentRental.Database;
 using EquipmentRental.Models;
 using EquipmentRental.Repositories.Interfaces;
+using EquipmentRental.Services.Communication;
 using EquipmentRental.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,19 +21,34 @@ namespace EquipmentRental.Services.DatabaseService
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task DeleteAsync(Guid id)
+        public async Task<UserResponse> DeleteAsync(Guid id)
         {
-            await _userRepository.DeleteAsync(id);
+            var existingSportEquipment = await _userRepository.FindByIdAsync(id);
+
+            if (existingSportEquipment is null)
+                return new UserResponse("Sport equipment not found.");
+
+            try
+            {
+                _userRepository.Remove(existingSportEquipment);
+                await _unitOfWork.Save();
+
+                return new UserResponse(existingSportEquipment);
+            }
+            catch (Exception ex)
+            {
+                return new UserResponse($"An error occurred when deleting the sport equipment: {ex.Message}");
+            };
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _userRepository.GetAllAsync();
+            return await _userRepository.ListAsync();
         }
 
         public async Task InsertAsync(User user)
         {
-            await _userRepository.InsertAsync(user);
+            await _userRepository.AddAsync(user);
         }
         public void Update(User user)
         {

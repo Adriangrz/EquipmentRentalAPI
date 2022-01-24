@@ -9,9 +9,9 @@ namespace EquipmentRental.Repositories.Interfaces
 {
     public interface IRentRepository
     {
-        Task<IEnumerable<Rent>> GetAllAsync();
+        Task<IEnumerable<Rent>> ListAsync();
         Task<Rent?> FindByIdAsync(Guid id);
-        Task InsertAsync(Rent rent);
+        Task AddAsync(Rent rent);
         void Update(Rent rent);
     }
 }

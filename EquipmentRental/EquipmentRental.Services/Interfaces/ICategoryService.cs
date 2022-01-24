@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace EquipmentRental.Services.Interfaces
 {
-    public interface IUserService
+    public interface ICategoryService
     {
-        Task<IEnumerable<User>> GetAllAsync();
-        Task InsertAsync(User user);
-        void Update(User user);
-        Task<UserResponse> DeleteAsync(Guid id);
+        Task<IEnumerable<Category>> GetAllAsync();
+        Task<CategoryResponse> InsertAsync(Category category);
+        Task<CategoryResponse> DeleteAsync(Guid id);
     }
 }

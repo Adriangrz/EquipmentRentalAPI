@@ -24,43 +24,48 @@ namespace EquipmentRental.Services
 
         public async Task<IEnumerable<Rent>> GetAllAsync()
         {
-            return await _rentRepository.GetAllAsync();
+            return await _rentRepository.ListAsync();
         }
 
         public async Task<RentResponse> InsertAsync(Rent rent)
         {
             try
             {
-                await _rentRepository.InsertAsync(rent);
+                await _rentRepository.AddAsync(rent);
                 await _unitOfWork.Save();
 
                 return new RentResponse(rent);
             }
             catch (Exception ex)
             {
-                return new RentResponse($"An error occurred when saving the category: {ex.Message}");
+                return new RentResponse($"An error occurred when saving the rent: {ex.Message}");
             }
         }
 
         public async Task<RentResponse> UpdateAsync(Guid id,Rent rent)
         {
-            var rentById = await _rentRepository.FindByIdAsync(id);
-            if (rentById is null)
-                return new RentResponse("Category not found.");
+            var existingRent = await _rentRepository.FindByIdAsync(id);
+            if (existingRent is null)
+                return new RentResponse("Rent not found.");
 
-            rent.RentId = id;
+            existingRent.From = rent.From;
+            existingRent.To = rent.To;
+            existingRent.IsIssued = rent.IsIssued;
+            existingRent.IssuedDate = rent.IssuedDate;
+            existingRent.IsReturned = rent.IsReturned;
+            existingRent.ReturnedDate = rent.ReturnedDate;
+            existingRent.SportEquipmentId = rent.SportEquipmentId;
 
             try
             {
-                _rentRepository.Update(rent);
+                _rentRepository.Update(existingRent);
                 await _unitOfWork.Save();
 
-                return new RentResponse(rentById);
+                return new RentResponse(existingRent);
             }
             catch (Exception ex)
             {
-                // Do some logging stuff
-                return new RentResponse($"An error occurred when updating the category: {ex.Message}");
+                return new RentResponse($"An error occurred when updating the rent: {ex.Message}");
             }
         }
     }

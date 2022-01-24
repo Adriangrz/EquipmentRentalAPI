@@ -1,8 +1,9 @@
-﻿using EquipmentRental.Models.ApiModels;
+﻿using AutoMapper;
+using EquipmentRental.Extensions;
+using EquipmentRental.Models;
+using EquipmentRental.Models.ApiModels;
 using EquipmentRental.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace EquipmentRental.Controllers
 {
@@ -10,36 +11,80 @@ namespace EquipmentRental.Controllers
     [ApiController]
     public class SportEquipmentController : ControllerBase
     {
+        private readonly ISportEquipmentService _sportEquipmentService;
+        private readonly IMapper _mapper;
+        public SportEquipmentController(ISportEquipmentService sportEquipmentService, IMapper mapper)
+        {
+            _sportEquipmentService = sportEquipmentService;
+            _mapper = mapper;
+        }
         // GET: api/<RentController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<SportEquipmentResource>> GetAsync()
         {
-            return new string[] { "value1", "value2" };
+            var sportsEquipment = await _sportEquipmentService.GetAllAsync();
+            var sportsEquipmentResource = _mapper.Map<IEnumerable<SportEquipment>, IEnumerable<SportEquipmentResource>>(sportsEquipment);
+            return sportsEquipmentResource;
         }
 
         // GET api/<RentController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetAsync(Guid id)
         {
-            return "value";
+            var result = await _sportEquipmentService.GetById(id);
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var sportEquipmentResource = _mapper.Map<SportEquipment, SportEquipmentResource>(result.Resource);
+            return Ok(sportEquipmentResource);
         }
 
         // POST api/<RentController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> PostAsync([FromBody] SaveUpdateSportEquipmentResource value)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
+
+            var sportsEquipment = _mapper.Map<SaveUpdateSportEquipmentResource, SportEquipment>(value);
+
+            var result = await _sportEquipmentService.InsertAsync(sportsEquipment);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var sportEquipmentResource = _mapper.Map<SportEquipment, SaveUpdateSportEquipmentResource>(result.Resource);
+            return Ok(sportEquipmentResource);
         }
 
         // PUT api/<RentController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> PutAsync(Guid id, [FromBody] SaveUpdateSportEquipmentResource value)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
+
+            var sportsEquipment = _mapper.Map<SaveUpdateSportEquipmentResource, SportEquipment>(value);
+            var result = await _sportEquipmentService.UpdateAsync(id, sportsEquipment);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var sportEquipmentResource = _mapper.Map<SportEquipment, SaveUpdateSportEquipmentResource>(result.Resource);
+            return Ok(sportEquipmentResource);
         }
 
         // DELETE api/<RentController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
+            var result = await _sportEquipmentService.DeleteAsync(id);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var sportEquipmentResource = _mapper.Map<SportEquipment, SportEquipmentResource>(result.Resource);
+            return Ok(sportEquipmentResource);
         }
     }
 }

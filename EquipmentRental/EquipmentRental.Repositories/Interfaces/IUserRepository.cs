@@ -9,9 +9,10 @@ namespace EquipmentRental.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllAsync();
-        Task InsertAsync(User user);
+        Task<IEnumerable<User>> ListAsync();
+        Task<User?> FindByIdAsync(Guid id);
+        Task AddAsync(User user);
         void Update(User user);
-        Task DeleteAsync(Guid id);
+        void Remove(User user);
     }
 }

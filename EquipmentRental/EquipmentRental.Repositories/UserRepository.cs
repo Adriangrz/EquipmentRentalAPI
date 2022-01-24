@@ -15,19 +15,22 @@ namespace EquipmentRental.Repositories
         public UserRepository(EquipmentRentalContext context) : base(context)
         {
         }
-        public async Task DeleteAsync(Guid id)
+        public void Remove(User user)
         {
-            User? user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
-            if (user is null) return;
             _context.Users.Remove(user);
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> ListAsync()
         {
             return await _context.Users.ToListAsync();
         }
 
-        public async Task InsertAsync(User user)
+        public async Task<User?> FindByIdAsync(Guid id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
+
+        public async Task AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
         }

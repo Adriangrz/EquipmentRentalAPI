@@ -1,4 +1,5 @@
 ﻿using EquipmentRental.Models;
+using EquipmentRental.Services.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,9 @@ namespace EquipmentRental.Services.Interfaces
     public interface ISportEquipmentService
     {
         Task<IEnumerable<SportEquipment>> GetAllAsync();
-        Task InsertAsync(SportEquipment equipment);
-        void Update(SportEquipment equipment);
-        Task DeleteAsync(Guid id);
+        Task<SportEquipmentResponse> GetById(Guid id);
+        Task<SportEquipmentResponse> InsertAsync(SportEquipment equipment);
+        Task<SportEquipmentResponse> UpdateAsync(Guid id,SportEquipment equipment);
+        Task<SportEquipmentResponse> DeleteAsync(Guid id);
     }
 }

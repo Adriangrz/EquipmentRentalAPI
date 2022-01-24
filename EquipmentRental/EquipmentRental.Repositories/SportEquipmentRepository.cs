@@ -15,19 +15,21 @@ namespace EquipmentRental.Repositories
         public SportEquipmentRepository(EquipmentRentalContext context) : base(context)
         {
         }
-        public async Task DeleteAsync(Guid id)
+        public void Remove(SportEquipment sportEquipment)
         {
-            SportEquipment? sportEquipment = await _context.SportsEquipment.SingleOrDefaultAsync(se => se.SportEquipmentId == id);
-            if (sportEquipment is null) return;
             _context.SportsEquipment.Remove(sportEquipment);
         }
 
-        public async Task<IEnumerable<SportEquipment>> GetAllAsync()
+        public async Task<IEnumerable<SportEquipment>> ListAsync()
         {
             return await _context.SportsEquipment.ToListAsync();
         }
 
-        public async Task InsertAsync(SportEquipment equipment)
+        public async Task<SportEquipment?> FindByIdAsync(Guid id)
+        {
+            return await _context.SportsEquipment.FindAsync(id);
+        }
+        public async Task AddAsync(SportEquipment equipment)
         {
             await _context.SportsEquipment.AddAsync(equipment);
         }

@@ -9,9 +9,10 @@ namespace EquipmentRental.Repositories.Interfaces
 {
     public interface ISportEquipmentRepository
     {
-        Task<IEnumerable<SportEquipment>> GetAllAsync();
-        Task InsertAsync(SportEquipment equipment);
+        Task<IEnumerable<SportEquipment>> ListAsync();
+        Task<SportEquipment?> FindByIdAsync(Guid id);
+        Task AddAsync(SportEquipment equipment);
         void Update(SportEquipment equipment);
-        Task DeleteAsync(Guid id);
+        void Remove(SportEquipment sportEquipment);
     }
 }
