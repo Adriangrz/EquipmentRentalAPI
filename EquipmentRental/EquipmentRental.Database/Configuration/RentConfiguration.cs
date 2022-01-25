@@ -26,6 +26,10 @@ namespace EquipmentRental.Database.Configuration
             builder.HasOne(r => r.SportEquipment)
                 .WithOne(se => se.Rent)
                 .HasForeignKey<Rent>(r => r.SportEquipmentId);
+
+            builder.HasOne(r => r.User)
+                .WithMany(u => u.Rents)
+                .HasForeignKey(r => r.UserId);
         }
     }
 }

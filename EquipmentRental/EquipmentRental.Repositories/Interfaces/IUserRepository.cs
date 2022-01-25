@@ -11,7 +11,7 @@ namespace EquipmentRental.Repositories.Interfaces
     {
         Task<IEnumerable<User>> ListAsync();
         Task<User?> FindByIdAsync(Guid id);
-        Task<User?> FindByNameAsync(string name);
+        Task<User?> FindByEmailAsync(string email);
         Task AddAsync(User user);
         void Update(User user);
         void Remove(User user);

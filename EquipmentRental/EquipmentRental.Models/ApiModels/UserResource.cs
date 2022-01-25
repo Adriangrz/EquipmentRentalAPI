@@ -9,6 +9,6 @@ namespace EquipmentRental.Models.ApiModels
     public class UserResource
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string Email { get; set; }
     }
 }

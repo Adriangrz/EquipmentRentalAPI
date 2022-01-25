@@ -50,11 +50,59 @@ namespace EquipmentRental.Services
 
             existingRent.From = rent.From;
             existingRent.To = rent.To;
+            existingRent.Name = rent.Name;
+            existingRent.Surname = rent.Surname;
+            existingRent.Street = rent.Street;
             existingRent.IsIssued = rent.IsIssued;
             existingRent.IssuedDate = rent.IssuedDate;
             existingRent.IsReturned = rent.IsReturned;
             existingRent.ReturnedDate = rent.ReturnedDate;
             existingRent.SportEquipmentId = rent.SportEquipmentId;
+            existingRent.UserId = rent.UserId;
+
+            try
+            {
+                _rentRepository.Update(existingRent);
+                await _unitOfWork.Save();
+
+                return new RentResponse(existingRent);
+            }
+            catch (Exception ex)
+            {
+                return new RentResponse($"An error occurred when updating the rent: {ex.Message}");
+            }
+        }
+
+        public async Task<RentResponse> UpdateIssuedAsync(Guid id, bool IsIssued)
+        {
+            var existingRent = await _rentRepository.FindByIdAsync(id);
+            if (existingRent is null)
+                return new RentResponse("Rent not found.");
+
+            existingRent.IsIssued = IsIssued;
+            existingRent.IssuedDate = DateTime.Now;
+
+            try
+            {
+                _rentRepository.Update(existingRent);
+                await _unitOfWork.Save();
+
+                return new RentResponse(existingRent);
+            }
+            catch (Exception ex)
+            {
+                return new RentResponse($"An error occurred when updating the rent: {ex.Message}");
+            }
+        }
+
+        public async Task<RentResponse> UpdateReturnedAsync(Guid id, bool IsReturned)
+        {
+            var existingRent = await _rentRepository.FindByIdAsync(id);
+            if (existingRent is null)
+                return new RentResponse("Rent not found.");
+
+            existingRent.IsReturned = IsReturned;
+            existingRent.ReturnedDate = DateTime.Now;
 
             try
             {

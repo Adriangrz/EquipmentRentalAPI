@@ -8,7 +8,7 @@ namespace EquipmentRental.Models.ApiModels
 {
     public class SaveUpdateUserResource
     {
-        public string Name { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
     }
 }

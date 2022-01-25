@@ -50,7 +50,7 @@ namespace EquipmentRental.Services.DatabaseService
 
         public async Task<UserResponse> InsertAsync(User user)
         {
-            var existingUser = await _userRepository.FindByNameAsync(user.Name);
+            var existingUser = await _userRepository.FindByEmailAsync(user.Email);
             if (existingUser is not null)
                 return new UserResponse("User name exist.");
 
@@ -75,6 +75,8 @@ namespace EquipmentRental.Services.DatabaseService
                 await _userRepository.AddAsync(user);
                 await _unitOfWork.Save();
 
+                user.Password = "";
+
                 return new UserResponse(user);
             }
             catch (Exception ex)
@@ -88,7 +90,7 @@ namespace EquipmentRental.Services.DatabaseService
             if (existingUser is null)
                 return new UserResponse("User not found.");
 
-            var existingUserWithThisName = await _userRepository.FindByNameAsync(user.Name);
+            var existingUserWithThisName = await _userRepository.FindByEmailAsync(user.Email);
             if (existingUserWithThisName is not null)
                 return new UserResponse("User name exist.");
 
@@ -105,7 +107,7 @@ namespace EquipmentRental.Services.DatabaseService
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
 
-            existingUser.Name = user.Name;
+            existingUser.Email = user.Email;
             existingUser.Password = hashed;
             existingUser.Salt = Convert.ToBase64String(salt);
 
@@ -113,6 +115,8 @@ namespace EquipmentRental.Services.DatabaseService
             {
                 _userRepository.Update(existingUser);
                 await _unitOfWork.Save();
+
+                existingUser.Password = "";
 
                 return new UserResponse(existingUser);
             }

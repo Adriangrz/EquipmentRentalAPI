@@ -30,9 +30,9 @@ namespace EquipmentRental.Repositories
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User?> FindByNameAsync(string name)
+        public async Task<User?> FindByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Name == name);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task AddAsync(User user)

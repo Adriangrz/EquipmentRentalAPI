@@ -61,5 +61,37 @@ namespace EquipmentRental.Controllers
             var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
             return Ok(rentResource);
         }
+
+        // PUT api/<RentController>/5/Issued
+        [HttpPut("{id}/Issued")]
+        public async Task<IActionResult> PutIssuedAsync(Guid id, [FromBody] bool isIssued)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
+
+            var result = await _rentService.UpdateIssuedAsync(id, isIssued);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
+            return Ok(rentResource);
+        }
+
+        // PUT api/<RentController>/5/Returned
+        [HttpPut("{id}/Returned")]
+        public async Task<IActionResult> PutReturnedAsync(Guid id, [FromBody] bool isReturned)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
+
+            var result = await _rentService.UpdateReturnedAsync(id, isReturned);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
+            return Ok(rentResource);
+        }
     }
 }

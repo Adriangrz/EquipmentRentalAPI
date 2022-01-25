@@ -15,6 +15,7 @@ namespace EquipmentRental.Mapping
             CreateMap<SportEquipment, SportEquipmentResource>();
             CreateMap<SportEquipment, SaveUpdateSportEquipmentResource>();
             CreateMap<User, UserResource>();
+            CreateMap<User, SaveUpdateUserResource>();
         }
     }
 }

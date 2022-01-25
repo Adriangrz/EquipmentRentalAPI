@@ -17,7 +17,7 @@ namespace EquipmentRental.Database.Configuration
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(u => u.Name)
+            builder.HasIndex(u => u.Email)
                 .IsUnique();
         }
     }

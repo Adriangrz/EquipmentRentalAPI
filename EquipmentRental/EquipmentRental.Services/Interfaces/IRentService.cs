@@ -13,5 +13,7 @@ namespace EquipmentRental.Services.Interfaces
         Task<IEnumerable<Rent>> GetAllAsync();
         Task<RentResponse> InsertAsync(Rent rent);
         Task<RentResponse> UpdateAsync(Guid id,Rent rent);
+        Task<RentResponse> UpdateIssuedAsync(Guid id, bool IsIssued);
+        Task<RentResponse> UpdateReturnedAsync(Guid id, bool IsReturned);
     }
 }
