@@ -3,6 +3,7 @@ using EquipmentRental.Extensions;
 using EquipmentRental.Models;
 using EquipmentRental.Models.ApiModels;
 using EquipmentRental.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EquipmentRental.Controllers
@@ -20,6 +21,7 @@ namespace EquipmentRental.Controllers
         }
         // GET: api/<CategoryController>
         [HttpGet]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IEnumerable<CategoryResource>> GetAsync()
         {
             var categories = await _categoryService.GetAllAsync();
@@ -29,6 +31,7 @@ namespace EquipmentRental.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> PostAsync([FromBody] SaveUpdateCategoryResource value)
         {
             if (!ModelState.IsValid)
@@ -41,12 +44,13 @@ namespace EquipmentRental.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Category, SaveUpdateCategoryResource>(result.Resource);
+            var categoryResource = _mapper.Map<Category, CategoryResource>(result.Resource);
             return Ok(categoryResource);
         }
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var result = await _categoryService.DeleteAsync(id);

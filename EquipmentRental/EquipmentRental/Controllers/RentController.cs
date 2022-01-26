@@ -3,6 +3,7 @@ using EquipmentRental.Extensions;
 using EquipmentRental.Models;
 using EquipmentRental.Models.ApiModels;
 using EquipmentRental.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EquipmentRental.Controllers
@@ -13,13 +14,16 @@ namespace EquipmentRental.Controllers
     {
         private readonly IRentService _rentService;
         private readonly IMapper _mapper;
-        public RentController(IRentService rentService, IMapper mapper)
+        private readonly IJwtAuthService _jwtAuthService;
+        public RentController(IRentService rentService, IMapper mapper, IJwtAuthService jwtAuthService)
         {
             _rentService = rentService;
             _mapper = mapper;
+            _jwtAuthService = jwtAuthService;
         }
         // GET: api/<RentController>
         [HttpGet]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IEnumerable<RentResource>> GetAsync()
         {
             var rents = await _rentService.GetAllAsync();
@@ -29,41 +33,49 @@ namespace EquipmentRental.Controllers
 
         // POST api/<RentController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveUpdateRentResource value)
+        [Authorize(Policy = Policies.User)]
+        public async Task<IActionResult> PostAsync([FromBody] SaveRentResource value)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var rent = _mapper.Map<SaveUpdateRentResource, Rent>(value);
+            var userIdFromToken = User.Claims.First(x => x.Type == "id").Value;
+            var id = _jwtAuthService.CheckUserId(value.UserId, userIdFromToken);
+            if (id is null)
+                return Unauthorized();
+
+            var rent = _mapper.Map<SaveRentResource, Rent>(value);
 
             var result = await _rentService.InsertAsync(rent);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
+            var rentResource = _mapper.Map<Rent, RentResource>(result.Resource);
             return Ok(rentResource);
         }
 
         // PUT api/<RentController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(Guid id, [FromBody] SaveUpdateRentResource value)
+        [Authorize(Policy = Policies.Admin)]
+        public async Task<IActionResult> PutAsync(Guid id, [FromBody] UpdateRentResource value)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var rent = _mapper.Map<SaveUpdateRentResource, Rent>(value);
+            var rent = _mapper.Map<UpdateRentResource, Rent>(value);
             var result = await _rentService.UpdateAsync(id, rent);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
+            var rentResource = _mapper.Map<Rent, RentResource>(result.Resource);
             return Ok(rentResource);
         }
 
         // PUT api/<RentController>/5/Issued
         [HttpPut("{id}/Issued")]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> PutIssuedAsync(Guid id, [FromBody] bool isIssued)
         {
             if (!ModelState.IsValid)
@@ -74,12 +86,13 @@ namespace EquipmentRental.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
+            var rentResource = _mapper.Map<Rent, RentResource>(result.Resource);
             return Ok(rentResource);
         }
 
         // PUT api/<RentController>/5/Returned
         [HttpPut("{id}/Returned")]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> PutReturnedAsync(Guid id, [FromBody] bool isReturned)
         {
             if (!ModelState.IsValid)
@@ -90,7 +103,7 @@ namespace EquipmentRental.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var rentResource = _mapper.Map<Rent, SaveUpdateRentResource>(result.Resource);
+            var rentResource = _mapper.Map<Rent, RentResource>(result.Resource);
             return Ok(rentResource);
         }
     }

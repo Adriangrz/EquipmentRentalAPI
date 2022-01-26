@@ -27,6 +27,14 @@ namespace EquipmentRental.Services
             return await _rentRepository.ListAsync();
         }
 
+        public async Task<RentsResponse> GetByUserIdAsync(Guid userId)
+        {
+            var rents =  await _rentRepository.FindByUserIdAsync(userId);
+            if(rents is null)
+                return new RentsResponse($"Not found");
+            return new RentsResponse(rents);
+        }
+
         public async Task<RentResponse> InsertAsync(Rent rent)
         {
             try
@@ -73,13 +81,13 @@ namespace EquipmentRental.Services
             }
         }
 
-        public async Task<RentResponse> UpdateIssuedAsync(Guid id, bool IsIssued)
+        public async Task<RentResponse> UpdateIssuedAsync(Guid id, bool isIssued)
         {
             var existingRent = await _rentRepository.FindByIdAsync(id);
             if (existingRent is null)
                 return new RentResponse("Rent not found.");
 
-            existingRent.IsIssued = IsIssued;
+            existingRent.IsIssued = isIssued;
             existingRent.IssuedDate = DateTime.Now;
 
             try
@@ -95,14 +103,35 @@ namespace EquipmentRental.Services
             }
         }
 
-        public async Task<RentResponse> UpdateReturnedAsync(Guid id, bool IsReturned)
+        public async Task<RentResponse> UpdateReturnedAsync(Guid id, bool isReturned)
         {
             var existingRent = await _rentRepository.FindByIdAsync(id);
             if (existingRent is null)
                 return new RentResponse("Rent not found.");
 
-            existingRent.IsReturned = IsReturned;
+            existingRent.IsReturned = isReturned;
             existingRent.ReturnedDate = DateTime.Now;
+
+            try
+            {
+                _rentRepository.Update(existingRent);
+                await _unitOfWork.Save();
+
+                return new RentResponse(existingRent);
+            }
+            catch (Exception ex)
+            {
+                return new RentResponse($"An error occurred when updating the rent: {ex.Message}");
+            }
+        }
+
+        public async Task<RentResponse> UpdateToAsync(Guid id, DateTime to)
+        {
+            var existingRent = await _rentRepository.FindByIdAsync(id);
+            if (existingRent is null)
+                return new RentResponse("Rent not found.");
+
+            existingRent.To = to;
 
             try
             {

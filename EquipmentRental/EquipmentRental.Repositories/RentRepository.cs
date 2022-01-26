@@ -35,5 +35,10 @@ namespace EquipmentRental.Repositories
         {
             _context.Rents.Update(rent);
         }
+
+        public async Task<IEnumerable<Rent>?> FindByUserIdAsync(Guid userId)
+        {
+            return await _context.Rents.Where(x=>x.UserId == userId).ToListAsync();
+        }
     }
 }

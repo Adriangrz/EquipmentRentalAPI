@@ -11,11 +11,13 @@ namespace EquipmentRental.Mapping
             CreateMap<Category, CategoryResource>();
             CreateMap<Category, SaveUpdateCategoryResource>();
             CreateMap<Rent, RentResource>();
-            CreateMap<Rent, SaveUpdateRentResource>();
+            CreateMap<Rent, SaveRentResource>();
+            CreateMap<Rent, UpdateRentResource>();
             CreateMap<SportEquipment, SportEquipmentResource>();
             CreateMap<SportEquipment, SaveUpdateSportEquipmentResource>();
             CreateMap<User, UserResource>();
             CreateMap<User, SaveUpdateUserResource>();
+            CreateMap<User, ReturnedUserResource>();
         }
     }
 }
