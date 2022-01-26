@@ -14,12 +14,14 @@ namespace EquipmentRental.Services
 {
     public class RentService : IRentService
     {
+        private readonly ISportEquipmentService _sportEquipmentService;
         private readonly IRentRepository _rentRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public RentService(IRentRepository rentRepository, IUnitOfWork unitOfWork)
+        public RentService(IRentRepository rentRepository, IUnitOfWork unitOfWork, ISportEquipmentService sportEquipmentService)
         {
             _rentRepository = rentRepository;
             _unitOfWork = unitOfWork;
+            _sportEquipmentService = sportEquipmentService;
         }
 
         public async Task<IEnumerable<Rent>> GetAllAsync()
@@ -37,9 +39,15 @@ namespace EquipmentRental.Services
 
         public async Task<RentResponse> InsertAsync(Rent rent)
         {
+            var result = await _sportEquipmentService.GetById(rent.SportEquipmentId);
+            if (!result.Success || !result.Resource.IsAvailable)
+                return new RentResponse("Sport equipment is not available");
+
             try
             {
                 await _rentRepository.AddAsync(rent);
+                result.Resource.IsAvailable = false;
+                await _sportEquipmentService.UpdateAsync(result.Resource.SportEquipmentId, result.Resource);
                 await _unitOfWork.Save();
 
                 return new RentResponse(rent);

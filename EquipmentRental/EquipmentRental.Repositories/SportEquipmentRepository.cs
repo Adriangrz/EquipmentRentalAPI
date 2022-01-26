@@ -22,7 +22,7 @@ namespace EquipmentRental.Repositories
 
         public async Task<IEnumerable<SportEquipment>> ListAsync()
         {
-            return await _context.SportsEquipment.ToListAsync();
+            return await _context.SportsEquipment.Where(x => x.IsAvailable != false).ToListAsync();
         }
 
         public async Task<SportEquipment?> FindByIdAsync(Guid id)
