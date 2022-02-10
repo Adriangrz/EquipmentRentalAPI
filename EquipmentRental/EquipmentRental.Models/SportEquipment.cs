@@ -14,6 +14,6 @@ namespace EquipmentRental.Models
         public bool IsAvailable { get; set; }
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
-        public Rent Rent { get; set; }
+        public ICollection<Rent> Rents { get; set; }
     }
 }

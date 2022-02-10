@@ -16,23 +16,21 @@ namespace EquipmentRental.Services.DatabaseService
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
         public async Task<UserResponse> DeleteAsync(Guid id)
         {
-            var existingUser = await _userRepository.FindByIdAsync(id);
+            var existingUser = await _unitOfWork.UserRepository.FindByIdAsync(id);
 
             if (existingUser is null)
                 return new UserResponse("User not found.");
 
             try
             {
-                _userRepository.Remove(existingUser);
+                _unitOfWork.UserRepository.Remove(existingUser);
                 await _unitOfWork.Save();
 
                 return new UserResponse(existingUser);
@@ -45,12 +43,12 @@ namespace EquipmentRental.Services.DatabaseService
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _userRepository.ListAsync();
+            return await _unitOfWork.UserRepository.ListAsync();
         }
 
         public async Task<UserResponse> InsertAsync(User user)
         {
-            var existingUser = await _userRepository.FindByEmailAsync(user.Email);
+            var existingUser = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
             if (existingUser is not null)
                 return new UserResponse("User name exist.");
 
@@ -72,7 +70,7 @@ namespace EquipmentRental.Services.DatabaseService
                 user.Password = hashed;
                 user.Salt = Convert.ToBase64String(salt);
 
-                await _userRepository.AddAsync(user);
+                await _unitOfWork.UserRepository.AddAsync(user);
                 await _unitOfWork.Save();
 
                 return new UserResponse(user);
@@ -84,11 +82,11 @@ namespace EquipmentRental.Services.DatabaseService
         }
         public async Task<UserResponse> UpdateAsync(Guid id, User user)
         {
-            var existingUser = await _userRepository.FindByIdAsync(id);
+            var existingUser = await _unitOfWork.UserRepository.FindByIdAsync(id);
             if (existingUser is null)
                 return new UserResponse("User not found.");
 
-            var existingUserWithThisName = await _userRepository.FindByEmailAsync(user.Email);
+            var existingUserWithThisName = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
             if (existingUserWithThisName is not null && !existingUser.Email.Equals(user.Email))
                 return new UserResponse("User name exist.");
 
@@ -112,7 +110,7 @@ namespace EquipmentRental.Services.DatabaseService
 
             try
             {
-                _userRepository.Update(existingUser);
+                _unitOfWork.UserRepository.Update(existingUser);
                 await _unitOfWork.Save();
 
                 return new UserResponse(existingUser);

@@ -24,8 +24,8 @@ namespace EquipmentRental.Database.Configuration
             builder.Property(x=>x.ReturnedDate).HasDefaultValue(null);
 
             builder.HasOne(r => r.SportEquipment)
-                .WithOne(se => se.Rent)
-                .HasForeignKey<Rent>(r => r.SportEquipmentId);
+                .WithMany(se => se.Rents)
+                .HasForeignKey(r => r.SportEquipmentId);
 
             builder.HasOne(r => r.User)
                 .WithMany(u => u.Rents)

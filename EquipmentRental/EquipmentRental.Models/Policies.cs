@@ -19,7 +19,7 @@ namespace EquipmentRental.Models
 
         public static AuthorizationPolicy UserPolicy()
         {
-            return new AuthorizationPolicyBuilder().RequireAuthenticatedUser().RequireRole(User).Build();
+            return new AuthorizationPolicyBuilder().RequireAuthenticatedUser().RequireRole(User, Admin).Build();
         }
     }
 }

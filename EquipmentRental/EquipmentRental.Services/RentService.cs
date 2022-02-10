@@ -14,24 +14,20 @@ namespace EquipmentRental.Services
 {
     public class RentService : IRentService
     {
-        private readonly ISportEquipmentService _sportEquipmentService;
-        private readonly IRentRepository _rentRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public RentService(IRentRepository rentRepository, IUnitOfWork unitOfWork, ISportEquipmentService sportEquipmentService)
+        public RentService(IUnitOfWork unitOfWork)
         {
-            _rentRepository = rentRepository;
             _unitOfWork = unitOfWork;
-            _sportEquipmentService = sportEquipmentService;
         }
 
         public async Task<IEnumerable<Rent>> GetAllAsync()
         {
-            return await _rentRepository.ListAsync();
+            return await _unitOfWork.RentRepository.ListAsync();
         }
 
         public async Task<RentsResponse> GetByUserIdAsync(Guid userId)
         {
-            var rents =  await _rentRepository.FindByUserIdAsync(userId);
+            var rents =  await _unitOfWork.RentRepository.FindByUserIdAsync(userId);
             if(rents is null)
                 return new RentsResponse($"Not found");
             return new RentsResponse(rents);
@@ -39,15 +35,15 @@ namespace EquipmentRental.Services
 
         public async Task<RentResponse> InsertAsync(Rent rent)
         {
-            var result = await _sportEquipmentService.GetById(rent.SportEquipmentId);
-            if (!result.Success || !result.Resource.IsAvailable)
+            var sportEquipment = await _unitOfWork.SportEquipmentRepository.FindByIdAsync(rent.SportEquipmentId);
+            if (sportEquipment is null || !sportEquipment.IsAvailable)
                 return new RentResponse("Sport equipment is not available");
 
             try
             {
-                await _rentRepository.AddAsync(rent);
-                result.Resource.IsAvailable = false;
-                await _sportEquipmentService.UpdateAsync(result.Resource.SportEquipmentId, result.Resource);
+                await _unitOfWork.RentRepository.AddAsync(rent);
+                sportEquipment.IsAvailable = false;
+                _unitOfWork.SportEquipmentRepository.Update(sportEquipment);
                 await _unitOfWork.Save();
 
                 return new RentResponse(rent);
@@ -60,7 +56,7 @@ namespace EquipmentRental.Services
 
         public async Task<RentResponse> UpdateAsync(Guid id,Rent rent)
         {
-            var existingRent = await _rentRepository.FindByIdAsync(id);
+            var existingRent = await _unitOfWork.RentRepository.FindByIdAsync(id);
             if (existingRent is null)
                 return new RentResponse("Rent not found.");
 
@@ -78,7 +74,7 @@ namespace EquipmentRental.Services
 
             try
             {
-                _rentRepository.Update(existingRent);
+                _unitOfWork.RentRepository.Update(existingRent);
                 await _unitOfWork.Save();
 
                 return new RentResponse(existingRent);
@@ -91,16 +87,19 @@ namespace EquipmentRental.Services
 
         public async Task<RentResponse> UpdateIssuedAsync(Guid id, bool isIssued)
         {
-            var existingRent = await _rentRepository.FindByIdAsync(id);
+            var existingRent = await _unitOfWork.RentRepository.FindByIdAsync(id);
             if (existingRent is null)
                 return new RentResponse("Rent not found.");
+
+            if (!isIssued)
+                return new RentResponse(existingRent);
 
             existingRent.IsIssued = isIssued;
             existingRent.IssuedDate = DateTime.Now;
 
             try
             {
-                _rentRepository.Update(existingRent);
+                _unitOfWork.RentRepository.Update(existingRent);
                 await _unitOfWork.Save();
 
                 return new RentResponse(existingRent);
@@ -113,16 +112,26 @@ namespace EquipmentRental.Services
 
         public async Task<RentResponse> UpdateReturnedAsync(Guid id, bool isReturned)
         {
-            var existingRent = await _rentRepository.FindByIdAsync(id);
+            var existingRent = await _unitOfWork.RentRepository.FindByIdAsync(id);
             if (existingRent is null)
                 return new RentResponse("Rent not found.");
 
+            if (!isReturned)
+                return new RentResponse(existingRent);
+
+            var sportEquipment = await _unitOfWork.SportEquipmentRepository.FindByIdAsync(existingRent.SportEquipmentId);
+
+            if (sportEquipment is null)
+                return new RentResponse("SportEquipment in rent not found.");
+
             existingRent.IsReturned = isReturned;
             existingRent.ReturnedDate = DateTime.Now;
+            sportEquipment.IsAvailable = true;
 
             try
             {
-                _rentRepository.Update(existingRent);
+                _unitOfWork.RentRepository.Update(existingRent);
+                _unitOfWork.SportEquipmentRepository.Update(sportEquipment);
                 await _unitOfWork.Save();
 
                 return new RentResponse(existingRent);
@@ -135,7 +144,7 @@ namespace EquipmentRental.Services
 
         public async Task<RentResponse> UpdateToAsync(Guid id, DateTime to)
         {
-            var existingRent = await _rentRepository.FindByIdAsync(id);
+            var existingRent = await _unitOfWork.RentRepository.FindByIdAsync(id);
             if (existingRent is null)
                 return new RentResponse("Rent not found.");
 
@@ -143,7 +152,7 @@ namespace EquipmentRental.Services
 
             try
             {
-                _rentRepository.Update(existingRent);
+                _unitOfWork.RentRepository.Update(existingRent);
                 await _unitOfWork.Save();
 
                 return new RentResponse(existingRent);

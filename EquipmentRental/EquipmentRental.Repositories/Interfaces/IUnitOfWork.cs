@@ -8,6 +8,10 @@ namespace EquipmentRental.Repositories.Interfaces
 {
     public interface IUnitOfWork
     {
+        ICategoryRepository CategoryRepository { get; }
+        IRentRepository RentRepository { get; }
+        ISportEquipmentRepository SportEquipmentRepository { get; }
+        IUserRepository UserRepository { get; }
         Task Save();
     }
 }

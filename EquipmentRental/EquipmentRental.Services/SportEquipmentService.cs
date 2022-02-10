@@ -14,24 +14,22 @@ namespace EquipmentRental.Services
 {
     public class SportEquipmentService : ISportEquipmentService
     {
-        private readonly ISportEquipmentRepository _sportEquipmentRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public SportEquipmentService(ISportEquipmentRepository sportEquipmentRepository, IUnitOfWork unitOfWork)
+        public SportEquipmentService(IUnitOfWork unitOfWork)
         {
-            _sportEquipmentRepository = sportEquipmentRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<SportEquipmentResponse> DeleteAsync(Guid id)
         {
-            var existingSportEquipment = await _sportEquipmentRepository.FindByIdAsync(id);
+            var existingSportEquipment = await _unitOfWork.SportEquipmentRepository.FindByIdAsync(id);
 
             if (existingSportEquipment is null)
                 return new SportEquipmentResponse("Sport equipment not found.");
 
             try
             {
-                _sportEquipmentRepository.Remove(existingSportEquipment);
+                _unitOfWork.SportEquipmentRepository.Remove(existingSportEquipment);
                 await _unitOfWork.Save();
 
                 return new SportEquipmentResponse(existingSportEquipment);
@@ -44,12 +42,12 @@ namespace EquipmentRental.Services
 
         public async Task<IEnumerable<SportEquipment>> GetAllAsync()
         {
-            return await _sportEquipmentRepository.ListAsync();
+            return await _unitOfWork.SportEquipmentRepository.ListAsync();
         }
 
         public async Task<SportEquipmentResponse> GetById(Guid id)
         {
-            var existingSportEquipment = await _sportEquipmentRepository.FindByIdAsync(id);
+            var existingSportEquipment = await _unitOfWork.SportEquipmentRepository.FindByIdAsync(id);
 
             if (existingSportEquipment is null)
                 return new SportEquipmentResponse("Sport equipment not found.");
@@ -61,7 +59,7 @@ namespace EquipmentRental.Services
         {
             try
             {
-                await _sportEquipmentRepository.AddAsync(equipment);
+                await _unitOfWork.SportEquipmentRepository.AddAsync(equipment);
                 await _unitOfWork.Save();
 
                 return new SportEquipmentResponse(equipment);
@@ -74,7 +72,7 @@ namespace EquipmentRental.Services
 
         public async Task<SportEquipmentResponse> UpdateAsync(Guid id, SportEquipment equipment)
         {
-            var existingSportEquipment = await _sportEquipmentRepository.FindByIdAsync(id);
+            var existingSportEquipment = await _unitOfWork.SportEquipmentRepository.FindByIdAsync(id);
             if (existingSportEquipment is null)
                 return new SportEquipmentResponse("Sport equipment not found.");
 
@@ -85,7 +83,7 @@ namespace EquipmentRental.Services
 
             try
             {
-                _sportEquipmentRepository.Update(existingSportEquipment);
+                _unitOfWork.SportEquipmentRepository.Update(existingSportEquipment);
                 await _unitOfWork.Save();
 
                 return new SportEquipmentResponse(existingSportEquipment);

@@ -19,17 +19,17 @@ namespace EquipmentRental.Services
         private readonly string _key;
         private readonly string _issuer;
         private readonly string _audience;
-        private readonly IUserRepository _userRepository;
-        public AuthService(IUserRepository userRepository, string key, string issuer, string audience)
+        private readonly IUnitOfWork _unitOfWork;
+        public AuthService(IUnitOfWork unitOfWork, string key, string issuer, string audience)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _key = key;
             _issuer = issuer;
             _audience = audience;
         }
         public async Task<UserResponse> AuthenticationAsync(User loginCredentials)
         {
-            var existingUser = await _userRepository.FindByEmailAsync(loginCredentials.Email);
+            var existingUser = await _unitOfWork.UserRepository.FindByEmailAsync(loginCredentials.Email);
             if (existingUser is null)
                 return new UserResponse("User credentials is not correct.");
 

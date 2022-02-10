@@ -12,24 +12,22 @@ namespace EquipmentRental.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryService(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+        public CategoryService(IUnitOfWork unitOfWork)
         {
-            _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<CategoryResponse> DeleteAsync(Guid id)
         {
-            var existingCategory = await _categoryRepository.FindByIdAsync(id);
+            var existingCategory = await _unitOfWork.CategoryRepository.FindByIdAsync(id);
 
             if (existingCategory == null)
                 return new CategoryResponse("Category not found.");
 
             try
             {
-                _categoryRepository.Remove(existingCategory);
+                _unitOfWork.CategoryRepository.Remove(existingCategory);
                 await _unitOfWork.Save();
 
                 return new CategoryResponse(existingCategory);
@@ -42,14 +40,14 @@ namespace EquipmentRental.Services
 
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            return await _categoryRepository.ListAsync();
+            return await _unitOfWork.CategoryRepository.ListAsync();
         }
 
         public async Task<CategoryResponse> InsertAsync(Category category)
         {
             try
             {
-                await _categoryRepository.AddAsync(category);
+                await _unitOfWork.CategoryRepository.AddAsync(category);
                 await _unitOfWork.Save();
 
                 return new CategoryResponse(category);
